@@ -10,8 +10,18 @@ import 'package:flutter/material.dart';
 
 class ImageCrop extends StatefulWidget {
   final ui.Image image;
+  final BoxFit fit;
+  final Alignment alignment;
 
-  ImageCrop({Key key, this.image})
+  final Color overlayColor;
+  final Color handleColor;
+
+  ImageCrop({Key key,
+    this.image,
+    this.fit = BoxFit.cover,
+    this.alignment = Alignment.center,
+    this.overlayColor = Colors.white30,
+    this.handleColor = Colors.white,})
       : assert(image != null),
         super(key: key);
 
@@ -99,8 +109,8 @@ class ImageCropState extends State<ImageCrop> {
       color: Colors.black87,
       child: GestureDetector(
         child: CustomPaint(
-          painter: _ImagePainter(_state),
-          foregroundPainter: _OverlayPainter(_state),
+          painter: _ImagePainter(_state, alignment: widget.alignment, fit: widget.fit),
+          foregroundPainter: _OverlayPainter(_state, overlayColor: widget.overlayColor, handleColor: widget.handleColor),
         ),
         onPanDown: (event) {
           _onUpdate(event.globalPosition);
@@ -278,9 +288,11 @@ class _SharedCropState {
 
 class _ImagePainter extends CustomPainter {
   final _SharedCropState state;
+  final BoxFit fit;
+  final Alignment alignment;
   final ui.Image image;
 
-  _ImagePainter(this.state) : image = state.image;
+  _ImagePainter(this.state, {this.fit = BoxFit.cover, this.alignment = Alignment.center}) : image = state.image;
 
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
@@ -290,14 +302,15 @@ class _ImagePainter extends CustomPainter {
       canvas: canvas,
       image: state.image,
       rect: displayRect,
-      fit: BoxFit.contain,
+      fit: fit,
+      alignment: alignment
     );
     state.imageSize = Size(
       state.image.width.toDouble(),
       state.image.height.toDouble(),
     );
     state.fittedImageSize = applyBoxFit(
-      BoxFit.contain,
+      fit,
       state.imageSize,
       size,
     );
@@ -318,7 +331,10 @@ class _OverlayPainter extends CustomPainter {
   final _SharedCropState _state;
   final Rect _cropRect;
 
-  _OverlayPainter(this._state) : _cropRect = _state.cropRect;
+  final Color overlayColor;
+  final Color handleColor;
+
+  _OverlayPainter(this._state, {this.overlayColor, this.handleColor}) : _cropRect = _state.cropRect;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -330,7 +346,7 @@ class _OverlayPainter extends CustomPainter {
     }
 
     final paintBackground = Paint();
-    paintBackground.color = Colors.white30;
+    paintBackground.color = overlayColor ?? Colors.white30;
     canvas.drawRect(_state.cropRect, paintBackground);
 
     final points = <Offset>[
@@ -342,7 +358,7 @@ class _OverlayPainter extends CustomPainter {
     final paintCorner = Paint()
       ..strokeWidth = 10.0
       ..strokeCap = StrokeCap.round
-      ..color = Colors.white;
+      ..color = overlayColor ?? Colors.white;
     canvas.drawPoints(ui.PointMode.points, points, paintCorner);
   }
 
