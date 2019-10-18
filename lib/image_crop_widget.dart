@@ -31,7 +31,7 @@ class ImageCrop extends StatefulWidget {
 
 class ImageCropState extends State<ImageCrop> {
 
-  double _handleSize = 64;
+  double _handleSize = 30;
 
   /// Rotates the image clockwise by 90 degree.
   /// Completes when the rotation is done.
@@ -159,34 +159,34 @@ class ImageCropState extends State<ImageCrop> {
   }
 
 
-  Offset _topLeft = Offset(50,50);
-  Offset _topRight = Offset(50,50);
-  Offset _bottomLeft = Offset(50,50);
-  Offset _bottomRight = Offset(50,50);
+  Offset _topLeft;
+  Offset _topRight;
+  Offset _bottomLeft;
+  Offset _bottomRight;
 
   void _updateCorners() {
-    if (_state.topLeft == null ) {
+    if (_topLeft == null ) {
       _state.topLeft = Rect.fromCenter(
           center: _state.cropRect.topLeft, width: _handleSize, height: _handleSize);
       _topLeft = _state.topLeft.center;
     }
 
-    if (_state.topRight == null) {
+    if (_topRight == null) {
       _state.topRight = Rect.fromCenter(
           center: _state.cropRect.topRight, width: _handleSize, height: _handleSize);
       _topRight = _state.topRight.center;
     }
 
-    if (_state.bottomLeft == null) {
+    if (_bottomLeft == null) {
       _state.bottomLeft = Rect.fromCenter(
           center: _state.cropRect.bottomLeft, width: _handleSize, height: _handleSize);
-      _topRight = _state.bottomLeft.center;
+      _bottomLeft = _state.bottomLeft.center;
     }
 
-    if (_state.bottomRight == null) {
+    if (_bottomRight == null) {
       _state.bottomRight = Rect.fromCenter(
           center: _state.cropRect.bottomRight, width: _handleSize, height: _handleSize);
-      _topRight = _state.bottomRight.center;
+      _bottomRight = _state.bottomRight.center;
     }
 
     if (_state.lastTouchPosition == null && _state.touchPosition != null) {
@@ -361,10 +361,10 @@ class _ImagePainter extends CustomPainter {
 class _OverlayPainter extends CustomPainter {
   final _SharedCropState _state;
   final Rect _cropRect;
-  final Offset topLeft;
-  final Offset topRight;
-  final Offset bottomLeft;
-  final Offset bottomRight;
+  Offset topLeft;
+  Offset topRight;
+  Offset bottomLeft;
+  Offset bottomRight;
   final Color overlayColor;
   final Color handleColor;
 
@@ -381,6 +381,10 @@ class _OverlayPainter extends CustomPainter {
           center: Offset(size.width / 2, size.height / 2),
           width: 100,
           height: 100);
+      topLeft = _state.cropRect.topLeft;
+      topRight = _state.cropRect.topRight;
+      bottomLeft = _state.cropRect.bottomLeft;
+      bottomRight = _state.cropRect.bottomRight;
     }
 
     final paintBackground = Paint();
@@ -402,7 +406,7 @@ class _OverlayPainter extends CustomPainter {
     final paintCorner = Paint()
       ..strokeWidth = 30.0
       ..strokeCap = StrokeCap.round
-      ..color = Colors.black;
+      ..color = Colors.blue;
     canvas.drawPoints(ui.PointMode.points, points, paintCorner);
   }
 
