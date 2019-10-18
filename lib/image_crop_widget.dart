@@ -186,24 +186,37 @@ class ImageCropState extends State<ImageCrop> {
 
     if (_state.touchPosition != null) {
       if (_state.topLeftActive) {
-        _state.cropRect = Rect.fromLTRB(
-          min(
-            max(
-              _state.touchPosition.dx,
-              _state.horizontalSpacing,
-            ),
-            _state.cropRect.right - _handleSize * 2,
+        _state.topLeft = Rect.fromLTRB(
+          max(
+            _state.touchPosition.dx,
+            _state.horizontalSpacing,
           ),
-          min(
-            max(
-              _state.touchPosition.dy,
-              _state.verticalSpacing,
-            ),
-            _state.cropRect.bottom - _handleSize * 2,
+          max(
+            _state.touchPosition.dy,
+            _state.verticalSpacing,
           ),
           _state.cropRect.right,
           _state.cropRect.bottom,
         );
+//
+//        _state.cropRect = Rect.fromLTRB(
+//          min(
+//            max(
+//              _state.touchPosition.dx,
+//              _state.horizontalSpacing,
+//            ),
+//            _state.cropRect.right - _handleSize * 2,
+//          ),
+//          min(
+//            max(
+//              _state.touchPosition.dy,
+//              _state.verticalSpacing,
+//            ),
+//            _state.cropRect.bottom - _handleSize * 2,
+//          ),
+//          _state.cropRect.right,
+//          _state.cropRect.bottom,
+//        );
       } else if (_state.topRightActive) {
         _state.cropRect = Rect.fromLTRB(
           _state.cropRect.left,
