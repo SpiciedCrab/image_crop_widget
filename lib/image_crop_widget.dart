@@ -115,7 +115,10 @@ class ImageCropState extends State<ImageCrop> {
           painter: _ImagePainter(_state, alignment: widget.alignment, fit: widget.fit),
           foregroundPainter: _OverlayPainter(_state,
               overlayColor: widget.overlayColor,
-              left: _topLeft,
+              topLeft: _topLeft,
+              topRight: _topRight,
+              bottomLeft: _bottomLeft,
+              bottomRight: _bottomRight,
               handleColor: widget.handleColor),
         ),
         onPanDown: (event) {
@@ -157,34 +160,37 @@ class ImageCropState extends State<ImageCrop> {
 
 
   Offset _topLeft = Offset(50,50);
+  Offset _topRight = Offset(50,50);
+  Offset _bottomLeft = Offset(50,50);
+  Offset _bottomRight = Offset(50,50);
+
   void _updateCorners() {
     if (_state.topLeft == null ) {
       _state.topLeft = Rect.fromCenter(
-          center: _topLeft, width: _handleSize, height: _handleSize);
-      _topLeft = _state.topLeft.topLeft;
+          center: _state.cropRect.topLeft, width: _handleSize, height: _handleSize);
+      _topLeft = _state.topLeft.center;
     }
 
-    if (_state.topRight == null ||
-        _state.topRight.center != _state.cropRect.topRight) {
+    if (_state.topRight == null) {
       _state.topRight = Rect.fromCenter(
           center: _state.cropRect.topRight, width: _handleSize, height: _handleSize);
+      _topRight = _state.topRight.center;
     }
 
-    if (_state.bottomLeft == null ||
-        _state.bottomLeft.center != _state.cropRect.bottomLeft) {
+    if (_state.bottomLeft == null) {
       _state.bottomLeft = Rect.fromCenter(
           center: _state.cropRect.bottomLeft, width: _handleSize, height: _handleSize);
+      _topRight = _state.bottomLeft.center;
     }
 
-    if (_state.bottomRight == null ||
-        _state.bottomRight.center != _state.cropRect.bottomRight) {
+    if (_state.bottomRight == null) {
       _state.bottomRight = Rect.fromCenter(
           center: _state.cropRect.bottomRight, width: _handleSize, height: _handleSize);
+      _topRight = _state.bottomRight.center;
     }
 
     if (_state.lastTouchPosition == null && _state.touchPosition != null) {
       _state.topLeftActive = _state.topLeft.contains(_state.touchPosition);
-      _state.topLeftActive = true;
       _state.topRightActive = _state.topRight.contains(_state.touchPosition);
       _state.bottomLeftActive =
           _state.bottomLeft.contains(_state.touchPosition);
@@ -217,61 +223,71 @@ class ImageCropState extends State<ImageCrop> {
 //          _state.cropRect.bottom,
 //        );
       } else if (_state.topRightActive) {
-        _state.cropRect = Rect.fromLTRB(
-          _state.cropRect.left,
-          min(
-            max(
-              _state.touchPosition.dy,
-              _state.verticalSpacing,
-            ),
-            _state.cropRect.bottom - _handleSize * 2,
-          ),
-          max(
-            min(
-              _state.touchPosition.dx,
-              _state.widgetSize.width - _state.horizontalSpacing,
-            ),
-            _state.cropRect.left + _handleSize * 2,
-          ),
-          _state.cropRect.bottom,
-        );
+        _topRight = _state.touchPosition;
+        _state.topRight = Rect.fromCenter(
+            center: _topRight, width: _handleSize, height: _handleSize);
+
+//        _state.cropRect = Rect.fromLTRB(
+//          _state.cropRect.left,
+//          min(
+//            max(
+//              _state.touchPosition.dy,
+//              _state.verticalSpacing,
+//            ),
+//            _state.cropRect.bottom - _handleSize * 2,
+//          ),
+//          max(
+//            min(
+//              _state.touchPosition.dx,
+//              _state.widgetSize.width - _state.horizontalSpacing,
+//            ),
+//            _state.cropRect.left + _handleSize * 2,
+//          ),
+//          _state.cropRect.bottom,
+//        );
       } else if (_state.bottomLeftActive) {
-        _state.cropRect = Rect.fromLTRB(
-          min(
-            max(
-              _state.touchPosition.dx,
-              _state.horizontalSpacing,
-            ),
-            _state.cropRect.right - _handleSize * 2,
-          ),
-          _state.cropRect.top,
-          _state.cropRect.right,
-          max(
-            min(
-              _state.touchPosition.dy,
-              _state.widgetSize.height - _state.verticalSpacing,
-            ),
-            _state.cropRect.top + _handleSize * 2,
-          ),
-        );
+        _bottomLeft = _state.touchPosition;
+        _state.bottomLeft = Rect.fromCenter(
+            center: _bottomLeft, width: _handleSize, height: _handleSize);
+//        _state.cropRect = Rect.fromLTRB(
+//          min(
+//            max(
+//              _state.touchPosition.dx,
+//              _state.horizontalSpacing,
+//            ),
+//            _state.cropRect.right - _handleSize * 2,
+//          ),
+//          _state.cropRect.top,
+//          _state.cropRect.right,
+//          max(
+//            min(
+//              _state.touchPosition.dy,
+//              _state.widgetSize.height - _state.verticalSpacing,
+//            ),
+//            _state.cropRect.top + _handleSize * 2,
+//          ),
+//        );
       } else if (_state.bottomRightActive) {
-        _state.cropRect = Rect.fromLTRB(
-          _state.cropRect.left,
-          _state.cropRect.top,
-          max(
-            min(
-              _state.touchPosition.dx,
-              _state.widgetSize.width - _state.horizontalSpacing,
-            ),
-            _state.cropRect.left + _handleSize * 2,
-          ),
-          max(
-            min(
-              _state.touchPosition.dy,
-              _state.widgetSize.height - _state.verticalSpacing,
-            ),
-            _state.cropRect.top + _handleSize * 2,
-          ),
+        _bottomRight = _state.touchPosition;
+        _state.bottomRight = Rect.fromCenter(
+            center: _bottomRight, width: _handleSize, height: _handleSize);
+//        _state.cropRect = Rect.fromLTRB(
+//          _state.cropRect.left,
+//          _state.cropRect.top,
+//          max(
+//            min(
+//              _state.touchPosition.dx,
+//              _state.widgetSize.width - _state.horizontalSpacing,
+//            ),
+//            _state.cropRect.left + _handleSize * 2,
+//          ),
+//          max(
+//            min(
+//              _state.touchPosition.dy,
+//              _state.widgetSize.height - _state.verticalSpacing,
+//            ),
+//            _state.cropRect.top + _handleSize * 2,
+//          ),
         );
       }
     }
@@ -345,11 +361,18 @@ class _ImagePainter extends CustomPainter {
 class _OverlayPainter extends CustomPainter {
   final _SharedCropState _state;
   final Rect _cropRect;
-  final Offset left;
+  final Offset topLeft;
+  final Offset topRight;
+  final Offset bottomLeft;
+  final Offset bottomRight;
   final Color overlayColor;
   final Color handleColor;
 
-  _OverlayPainter(this._state, {this.overlayColor, this.handleColor, this.left}) : _cropRect = _state.cropRect;
+  _OverlayPainter(this._state, {this.overlayColor, this.handleColor,
+    this.topLeft,
+    this.topRight,
+    this.bottomLeft,
+    this.bottomRight}) : _cropRect = _state.cropRect;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -364,27 +387,27 @@ class _OverlayPainter extends CustomPainter {
     paintBackground.color = overlayColor ?? Colors.white30;
     paintBackground.style = PaintingStyle.fill;
 //    canvas.drawRect(_state.cropRect, paintBackground);
-    Path path = new Path()..moveTo(left.dx, left.dy);
-    path.lineTo(_state.cropRect.topRight.dx, _state.cropRect.topRight.dy);
-    path.lineTo(_state.cropRect.bottomRight.dx, _state.cropRect.bottomRight.dy);
-    path.lineTo(_state.cropRect.bottomLeft.dx, _state.cropRect.bottomLeft.dy);
+    Path path = new Path()..moveTo(topLeft.dx, topLeft.dy);
+    path.lineTo(topRight.dx, topRight.dy);
+    path.lineTo(bottomRight.dx, bottomRight.dy);
+    path.lineTo(bottomLeft.dx, bottomLeft.dy);
     canvas.drawPath(path, paintBackground);
 
     final points = <Offset>[
-      left,
-      _state.cropRect.topRight,
-      _state.cropRect.bottomLeft,
-      _state.cropRect.bottomRight
+      topLeft,
+      topRight,
+      bottomLeft,
+      bottomRight
     ];
     final paintCorner = Paint()
       ..strokeWidth = 30.0
       ..strokeCap = StrokeCap.round
-      ..color = Colors.grey;
+      ..color = Colors.black;
     canvas.drawPoints(ui.PointMode.points, points, paintCorner);
   }
 
   @override
   bool shouldRepaint(_OverlayPainter oldDelegate) {
-    return _cropRect != oldDelegate._cropRect;
+    return true;
   }
 }
