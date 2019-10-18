@@ -30,6 +30,9 @@ class ImageCrop extends StatefulWidget {
 }
 
 class ImageCropState extends State<ImageCrop> {
+
+  double _handleSize = 50;
+
   /// Rotates the image clockwise by 90 degree.
   /// Completes when the rotation is done.
   Future<void> rotateImage() async {
@@ -151,25 +154,25 @@ class ImageCropState extends State<ImageCrop> {
     if (_state.topLeft == null ||
         _state.topLeft.center != _state.cropRect.topLeft) {
       _state.topLeft = Rect.fromCenter(
-          center: _state.cropRect.topLeft, width: 32, height: 32);
+          center: _state.cropRect.topLeft, width: _handleSize, height: _handleSize);
     }
 
     if (_state.topRight == null ||
         _state.topRight.center != _state.cropRect.topRight) {
       _state.topRight = Rect.fromCenter(
-          center: _state.cropRect.topRight, width: 32, height: 32);
+          center: _state.cropRect.topRight, width: _handleSize, height: _handleSize);
     }
 
     if (_state.bottomLeft == null ||
         _state.bottomLeft.center != _state.cropRect.bottomLeft) {
       _state.bottomLeft = Rect.fromCenter(
-          center: _state.cropRect.bottomLeft, width: 32, height: 32);
+          center: _state.cropRect.bottomLeft, width: _handleSize, height: _handleSize);
     }
 
     if (_state.bottomRight == null ||
         _state.bottomRight.center != _state.cropRect.bottomRight) {
       _state.bottomRight = Rect.fromCenter(
-          center: _state.cropRect.bottomRight, width: 32, height: 32);
+          center: _state.cropRect.bottomRight, width: _handleSize, height: _handleSize);
     }
 
     if (_state.lastTouchPosition == null && _state.touchPosition != null) {
@@ -189,14 +192,14 @@ class ImageCropState extends State<ImageCrop> {
               _state.touchPosition.dx,
               _state.horizontalSpacing,
             ),
-            _state.cropRect.right - 64,
+            _state.cropRect.right - _handleSize * 2,
           ),
           min(
             max(
               _state.touchPosition.dy,
               _state.verticalSpacing,
             ),
-            _state.cropRect.bottom - 64,
+            _state.cropRect.bottom - _handleSize * 2,
           ),
           _state.cropRect.right,
           _state.cropRect.bottom,
@@ -209,14 +212,14 @@ class ImageCropState extends State<ImageCrop> {
               _state.touchPosition.dy,
               _state.verticalSpacing,
             ),
-            _state.cropRect.bottom - 64,
+            _state.cropRect.bottom - _handleSize * 2,
           ),
           max(
             min(
               _state.touchPosition.dx,
               _state.widgetSize.width - _state.horizontalSpacing,
             ),
-            _state.cropRect.left + 64,
+            _state.cropRect.left + _handleSize * 2,
           ),
           _state.cropRect.bottom,
         );
@@ -227,7 +230,7 @@ class ImageCropState extends State<ImageCrop> {
               _state.touchPosition.dx,
               _state.horizontalSpacing,
             ),
-            _state.cropRect.right - 64,
+            _state.cropRect.right - _handleSize * 2,
           ),
           _state.cropRect.top,
           _state.cropRect.right,
@@ -236,7 +239,7 @@ class ImageCropState extends State<ImageCrop> {
               _state.touchPosition.dy,
               _state.widgetSize.height - _state.verticalSpacing,
             ),
-            _state.cropRect.top + 64,
+            _state.cropRect.top + _handleSize * 2,
           ),
         );
       } else if (_state.bottomRightActive) {
@@ -248,14 +251,14 @@ class ImageCropState extends State<ImageCrop> {
               _state.touchPosition.dx,
               _state.widgetSize.width - _state.horizontalSpacing,
             ),
-            _state.cropRect.left + 64,
+            _state.cropRect.left + _handleSize * 2,
           ),
           max(
             min(
               _state.touchPosition.dy,
               _state.widgetSize.height - _state.verticalSpacing,
             ),
-            _state.cropRect.top + 64,
+            _state.cropRect.top + _handleSize * 2,
           ),
         );
       }
