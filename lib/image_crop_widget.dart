@@ -115,7 +115,7 @@ class ImageCropState extends State<ImageCrop> {
           painter: _ImagePainter(_state, alignment: widget.alignment, fit: widget.fit),
           foregroundPainter: _OverlayPainter(_state,
               overlayColor: widget.overlayColor,
-              left: _state.topLeft,
+              left: _topLeft,
               handleColor: widget.handleColor),
         ),
         onPanDown: (event) {
@@ -149,16 +149,19 @@ class ImageCropState extends State<ImageCrop> {
     _state.lastTouchPosition = _state.touchPosition;
     _state.touchPosition = renderBox.globalToLocal(globalPosition);
 
-    _updateCorners();
-    setState(() {});
+
+    setState(() {
+      _updateCorners();
+    });
   }
 
 
-  Rect _topLeft;
+  Offset _topLeft = Offset(50,50);
   void _updateCorners() {
     if (_state.topLeft == null ) {
       _state.topLeft = Rect.fromCenter(
-          center: _state.cropRect.topLeft, width: _handleSize, height: _handleSize);
+          center: _topLeft, width: _handleSize, height: _handleSize);
+      _topLeft = _state.topLeft.topLeft;
     }
 
     if (_state.topRight == null ||
@@ -181,6 +184,7 @@ class ImageCropState extends State<ImageCrop> {
 
     if (_state.lastTouchPosition == null && _state.touchPosition != null) {
       _state.topLeftActive = _state.topLeft.contains(_state.touchPosition);
+      _state.topLeftActive = true;
       _state.topRightActive = _state.topRight.contains(_state.touchPosition);
       _state.bottomLeftActive =
           _state.bottomLeft.contains(_state.touchPosition);
@@ -190,18 +194,9 @@ class ImageCropState extends State<ImageCrop> {
 
     if (_state.touchPosition != null) {
       if (_state.topLeftActive) {
-        _state.topLeft = Rect.fromLTRB(
-          max(
-            _state.touchPosition.dx,
-            _state.horizontalSpacing,
-          ),
-          max(
-            _state.touchPosition.dy,
-            _state.verticalSpacing,
-          ),
-          _state.cropRect.right,
-          _state.cropRect.bottom,
-        );
+        _topLeft = _state.touchPosition;
+        _state.topLeft = Rect.fromCenter(
+            center: _topLeft, width: _handleSize, height: _handleSize);
 //
 //        _state.cropRect = Rect.fromLTRB(
 //          min(
@@ -350,7 +345,7 @@ class _ImagePainter extends CustomPainter {
 class _OverlayPainter extends CustomPainter {
   final _SharedCropState _state;
   final Rect _cropRect;
-  final Rect left;
+  final Offset left;
   final Color overlayColor;
   final Color handleColor;
 
@@ -369,14 +364,14 @@ class _OverlayPainter extends CustomPainter {
     paintBackground.color = overlayColor ?? Colors.white30;
     paintBackground.style = PaintingStyle.fill;
 //    canvas.drawRect(_state.cropRect, paintBackground);
-    Path path = new Path()..moveTo(_state.cropRect.topLeft.dx, _state.cropRect.topLeft.dy);
+    Path path = new Path()..moveTo(left.dx, left.dy);
     path.lineTo(_state.cropRect.topRight.dx, _state.cropRect.topRight.dy);
     path.lineTo(_state.cropRect.bottomRight.dx, _state.cropRect.bottomRight.dy);
     path.lineTo(_state.cropRect.bottomLeft.dx, _state.cropRect.bottomLeft.dy);
     canvas.drawPath(path, paintBackground);
 
     final points = <Offset>[
-      _state.cropRect.topLeft,
+      left,
       _state.cropRect.topRight,
       _state.cropRect.bottomLeft,
       _state.cropRect.bottomRight
@@ -384,7 +379,7 @@ class _OverlayPainter extends CustomPainter {
     final paintCorner = Paint()
       ..strokeWidth = 30.0
       ..strokeCap = StrokeCap.round
-      ..color = Colors.blue;
+      ..color = Colors.grey;
     canvas.drawPoints(ui.PointMode.points, points, paintCorner);
   }
 
