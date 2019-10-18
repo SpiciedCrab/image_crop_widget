@@ -20,7 +20,7 @@ class ImageCrop extends StatefulWidget {
     this.image,
     this.fit = BoxFit.cover,
     this.alignment = Alignment.center,
-    this.overlayColor = Colors.white30,
+    this.overlayColor = Colors.white,
     this.handleColor = Colors.white,})
       : assert(image != null),
         super(key: key);
@@ -31,7 +31,7 @@ class ImageCrop extends StatefulWidget {
 
 class ImageCropState extends State<ImageCrop> {
 
-  double _handleSize = 50;
+  double _handleSize = 64;
 
   /// Rotates the image clockwise by 90 degree.
   /// Completes when the rotation is done.
@@ -302,11 +302,11 @@ class _ImagePainter extends CustomPainter {
     final displayRect = Rect.fromLTWH(0.0, 0.0, size.width, size.height);
     state.widgetSize = size;
     paintImage(
-      canvas: canvas,
-      image: state.image,
-      rect: displayRect,
-      fit: fit,
-      alignment: alignment
+        canvas: canvas,
+        image: state.image,
+        rect: displayRect,
+        fit: fit,
+        alignment: alignment
     );
     state.imageSize = Size(
       state.image.width.toDouble(),
@@ -350,7 +350,13 @@ class _OverlayPainter extends CustomPainter {
 
     final paintBackground = Paint();
     paintBackground.color = overlayColor ?? Colors.white30;
-    canvas.drawRect(_state.cropRect, paintBackground);
+    paintBackground.style = PaintingStyle.fill;
+//    canvas.drawRect(_state.cropRect, paintBackground);
+    Path path = new Path()..moveTo(_state.cropRect.topLeft.dx, _state.cropRect.topLeft.dy);
+    path.lineTo(_state.cropRect.topRight.dx, _state.cropRect.topRight.dy);
+    path.lineTo(_state.cropRect.bottomRight.dx, _state.cropRect.bottomRight.dy);
+    path.lineTo(_state.cropRect.bottomLeft.dx, _state.cropRect.bottomLeft.dy);
+    canvas.drawPath(path, paintBackground);
 
     final points = <Offset>[
       _state.cropRect.topLeft,
@@ -359,9 +365,9 @@ class _OverlayPainter extends CustomPainter {
       _state.cropRect.bottomRight
     ];
     final paintCorner = Paint()
-      ..strokeWidth = 10.0
+      ..strokeWidth = 30.0
       ..strokeCap = StrokeCap.round
-      ..color = overlayColor ?? Colors.white;
+      ..color = Colors.yellow;
     canvas.drawPoints(ui.PointMode.points, points, paintCorner);
   }
 
