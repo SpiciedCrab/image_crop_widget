@@ -288,7 +288,7 @@ class ImageCropState extends State<ImageCrop> {
 //            ),
 //            _state.cropRect.top + _handleSize * 2,
 //          ),
-        );
+//        );
       }
     }
   }
