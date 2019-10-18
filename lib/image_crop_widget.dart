@@ -150,11 +150,13 @@ class ImageCropState extends State<ImageCrop> {
     setState(() {});
   }
 
+
+  Rect _topLeft;
   void _updateCorners() {
     if (_state.topLeft == null ||
         _state.topLeft.center != _state.cropRect.topLeft) {
-//      _state.topLeft = Rect.fromCenter(
-//          center: _state.cropRect.topLeft, width: _handleSize, height: _handleSize);
+      _state.topLeft = Rect.fromCenter(
+          center: _state.cropRect.topLeft, width: _handleSize, height: _handleSize);
     }
 
     if (_state.topRight == null ||
