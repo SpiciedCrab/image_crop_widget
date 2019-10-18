@@ -113,7 +113,10 @@ class ImageCropState extends State<ImageCrop> {
       child: GestureDetector(
         child: CustomPaint(
           painter: _ImagePainter(_state, alignment: widget.alignment, fit: widget.fit),
-          foregroundPainter: _OverlayPainter(_state, overlayColor: widget.overlayColor, handleColor: widget.handleColor),
+          foregroundPainter: _OverlayPainter(_state,
+              overlayColor: widget.overlayColor,
+              left: _state.topLeft,
+              handleColor: widget.handleColor),
         ),
         onPanDown: (event) {
           _onUpdate(event.globalPosition);
@@ -153,8 +156,7 @@ class ImageCropState extends State<ImageCrop> {
 
   Rect _topLeft;
   void _updateCorners() {
-    if (_state.topLeft == null ||
-        _state.topLeft.center != _state.cropRect.topLeft) {
+    if (_state.topLeft == null ) {
       _state.topLeft = Rect.fromCenter(
           center: _state.cropRect.topLeft, width: _handleSize, height: _handleSize);
     }
@@ -348,11 +350,11 @@ class _ImagePainter extends CustomPainter {
 class _OverlayPainter extends CustomPainter {
   final _SharedCropState _state;
   final Rect _cropRect;
-
+  final Rect left;
   final Color overlayColor;
   final Color handleColor;
 
-  _OverlayPainter(this._state, {this.overlayColor, this.handleColor}) : _cropRect = _state.cropRect;
+  _OverlayPainter(this._state, {this.overlayColor, this.handleColor, this.left}) : _cropRect = _state.cropRect;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -382,7 +384,7 @@ class _OverlayPainter extends CustomPainter {
     final paintCorner = Paint()
       ..strokeWidth = 30.0
       ..strokeCap = StrokeCap.round
-      ..color = Colors.yellow;
+      ..color = Colors.blue;
     canvas.drawPoints(ui.PointMode.points, points, paintCorner);
   }
 
