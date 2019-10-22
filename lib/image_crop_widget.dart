@@ -40,7 +40,7 @@ class ImageCrop extends StatefulWidget {
 
 class ImageCropState extends State<ImageCrop> {
 
-  double _handleSize = 30;
+  double _handleSize = 50;
 
   /// Rotates the image clockwise by 90 degree.
   /// Completes when the rotation is done.
@@ -436,9 +436,9 @@ class _OverlayPainter extends CustomPainter {
       bottomRight
     ];
     final paintCorner = Paint()
-      ..strokeWidth = 30.0
+      ..strokeWidth = 20.0
       ..strokeCap = StrokeCap.round
-      ..color = Colors.blue;
+      ..color = handleColor;
     canvas.drawPoints(ui.PointMode.points, points, paintCorner);
   }
 
