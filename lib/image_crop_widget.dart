@@ -115,6 +115,8 @@ class ImageCropState extends State<ImageCrop> {
 
   _SharedCropState _state = _SharedCropState();
 
+  bool _shouldHideHandle = false;
+
   @override
   void initState() {
     super.initState();
@@ -136,7 +138,8 @@ class ImageCropState extends State<ImageCrop> {
               topRight: _topRight,
               bottomLeft: _bottomLeft,
               bottomRight: _bottomRight,
-              handleColor: widget.handleColor),
+              handleColor:  widget.handleColor,
+              shouldHideHandle: _shouldHideHandle),
         ),
         onPanDown: (event) {
           _onUpdate(event.globalPosition);
@@ -162,6 +165,13 @@ class ImageCropState extends State<ImageCrop> {
         onDoubleTap: () => cropImage(),
       ),
     );
+  }
+
+  void hideHandle() {
+    setState(() {
+      _shouldHideHandle = true;
+      _updateCorners();
+    });
   }
 
   void _onUpdate(Offset globalPosition) {
@@ -384,12 +394,13 @@ class _OverlayPainter extends CustomPainter {
   Offset bottomRight;
   final Color overlayColor;
   final Color handleColor;
+  final bool shouldHideHandle;
 
   _OverlayPainter(this._state, {this.overlayColor, this.handleColor,
     this.topLeft,
     this.topRight,
     this.bottomLeft,
-    this.bottomRight}) : _cropRect = _state.cropRect;
+    this.bottomRight, this.shouldHideHandle}) : _cropRect = _state.cropRect;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -413,6 +424,10 @@ class _OverlayPainter extends CustomPainter {
     path.lineTo(bottomRight.dx, bottomRight.dy);
     path.lineTo(bottomLeft.dx, bottomLeft.dy);
     canvas.drawPath(path, paintBackground);
+
+    if(shouldHideHandle) {
+      return;
+    }
 
     final points = <Offset>[
       topLeft,
