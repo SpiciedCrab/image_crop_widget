@@ -8,6 +8,15 @@ import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
+class PointLocation {
+  Offset topLeft;
+  Offset topRight;
+  Offset bottomRight;
+  Offset bottomLeft;
+
+  PointLocation({this.topLeft, this.topRight, this.bottomRight, this.bottomLeft});
+}
+
 class ImageCrop extends StatefulWidget {
   final ui.Image image;
   final BoxFit fit;
@@ -94,6 +103,10 @@ class ImageCropState extends State<ImageCrop> {
     );
 
     return croppedImage;
+  }
+
+  PointLocation locatePoints() {
+    return PointLocation(topLeft: _topLeft, topRight: _topRight, bottomLeft: _bottomLeft, bottomRight: _bottomRight);
   }
 
   _SharedCropState _state = _SharedCropState();
