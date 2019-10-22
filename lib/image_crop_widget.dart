@@ -40,7 +40,7 @@ class ImageCrop extends StatefulWidget {
 
 class ImageCropState extends State<ImageCrop> {
 
-  double _handleSize = 50;
+  double _handleSize = 30;
 
   /// Rotates the image clockwise by 90 degree.
   /// Completes when the rotation is done.
