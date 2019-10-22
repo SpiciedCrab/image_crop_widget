@@ -90,9 +90,13 @@ class ImageCropState extends State<ImageCrop> {
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
 
+    canvas.clipPath(Path()
+      ..moveTo(_topLeft.dx, _topLeft.dy)..lineTo(_topRight.dx, _topRight.dy)
+      ..lineTo(_bottomRight.dx, _bottomRight.dy)..lineTo(_bottomLeft.dx, _bottomLeft.dy));
+
     canvas.drawImage(
       _state.image,
-      Offset(-imageCropRect.left, -imageCropRect.top),
+      Offset(-_topLeft.dx * scale, -_topLeft.dy * scale),
       Paint(),
     );
 
