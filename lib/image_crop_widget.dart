@@ -416,7 +416,7 @@ class _OverlayPainter extends CustomPainter {
     }
 
     final paintBackground = Paint();
-    paintBackground.color = overlayColor ?? Colors.white30;
+    paintBackground.color = shouldHideHandle ? Colors.transparent : (overlayColor ?? Colors.white30);
     paintBackground.style = PaintingStyle.fill;
 //    canvas.drawRect(_state.cropRect, paintBackground);
     Path path = new Path()..moveTo(topLeft.dx, topLeft.dy);
