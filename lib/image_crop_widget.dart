@@ -404,11 +404,6 @@ class _OverlayPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-
-    if(shouldHideHandle) {
-      return;
-    }
-    
     if (_state.cropRect == null) {
       _state.cropRect = Rect.fromCenter(
           center: Offset(size.width / 2, size.height / 2),
@@ -429,6 +424,10 @@ class _OverlayPainter extends CustomPainter {
     path.lineTo(bottomRight.dx, bottomRight.dy);
     path.lineTo(bottomLeft.dx, bottomLeft.dy);
     canvas.drawPath(path, paintBackground);
+
+    if(shouldHideHandle) {
+      return;
+    }
 
     final points = <Offset>[
       topLeft,
